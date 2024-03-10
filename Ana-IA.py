@@ -25,7 +25,7 @@ def ana ():
             comando = comando.lower()
             if 'ana' in comando:
                 print(comando)
-                ana.say('ola')
+                ana.say(comando)
                 ana.runAndWait()
 
     except:
