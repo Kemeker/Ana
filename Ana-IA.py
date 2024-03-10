@@ -4,7 +4,7 @@ import pandas as pd
 from tkinter import Canvas, PhotoImage, ttk
 import tkinter as tk
 import tkinter.ttk as ttk
-import datetime as dt
+import datetime 
 import os
 import tkinter.messagebox as msg
 from PIL import ImageTk, Image
@@ -19,20 +19,38 @@ def ana ():
 
     try:
         with sr.Microphone() as source:
-            print('Ouvindo...')
+            print("Ouvindo...")
             voz = audio.listen(source)
-            comando = audio.recognize_google(voz, language='pt_BR')
+            comando = audio.recognize_google(voz, language="pt_BR")
             comando = comando.lower()
-            if 'ana' in comando:
-                print(comando)
+            if "ana" in comando:
+                comando = comando.replace("ana", " ")
                 ana.say(comando)
                 ana.runAndWait()
 
     except:
-        print('Microfone nao esta funcionando')   
+        print("Microfone nao esta funcionando") 
+
+    return comando      
 
 
-'''-----------------------------Interface do programa----------------------------------------------------'''
+def comando_voz_usuario():
+    comando = ana()
+    if "horas" in comando:
+        hora = datetime.datetime.now().strftime("%H:%M")
+        ana.say("Agora são" + hora)
+        ana.runAndWait()
+
+
+
+comando_voz_usuario()
+
+
+
+
+
+'''--------------------------------Interface da IA---------------------------------'''
+'''
 aplication = tk.Tk()
 
 aplication.title("Ana Inteligencia Artificial")
@@ -56,5 +74,5 @@ canvas1.create_image(0, 0, anchor=tk.NW, image=photo)
 aplication.mainloop()
 
 
-
+'''
    
