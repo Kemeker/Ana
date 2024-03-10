@@ -1,8 +1,5 @@
 import speech_recognition as sr
 import pyttsx3
-from turtle import bgcolor
-from webbrowser import BackgroundBrowser
-from numpy import imag
 import pandas as pd
 from tkinter import Canvas, PhotoImage, ttk
 import tkinter as tk
@@ -16,15 +13,9 @@ from PIL import ImageTk, Image
 
 def ana ():
     '''Ana/IA'''
+
+    audio = sr.Recognizer()
     ana = pyttsx3.init()
-
-    '''-------- Dialogo da IA apos ser iniciada---------'''
-    ana.say('Ola, eu sou a Ana, assistente virtual do Cristian')
-    ana.say('Como posso te ajudar?')
-    ana.say(' nao fala mais nada, já fiquei estressada')
-
-    ana.runAndWait()
-
 
     try:
         with sr.Microphone() as source:
@@ -34,6 +25,8 @@ def ana ():
             comando = comando.lower()
             if 'ana' in comando:
                 print(comando)
+                ana.say('ola')
+                ana.runAndWait()
 
     except:
         print('Microfone nao esta funcionando')   
