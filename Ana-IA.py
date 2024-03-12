@@ -21,19 +21,25 @@ def ana ():
         with sr.Microphone() as source:
             print("Ouvindo...")
             voz = audio.listen(source)
-            comando = audio.recognize_google(voz, language="pt_BR")
+            comando = audio.recognize_google_cloud(voz, language="pt_BR")
             comando = comando.lower()
-            if "ana" in comando:
-                comando = comando.replace("ana", " ")
-                ana.say(comando)
+            print("comando reconnhecido", comando)
+            if "ativar ana" in comando:
+                print('Assistete ativa')
+                ana.say("Olá, tudo bem, eu sou a Ana")
                 ana.runAndWait()
+                comando = ' ' #reinnicia o comando apos a resposta da Ana
 
-    except:
-        print("Microfone nao esta funcionando") 
+    except sr.RequestError as e:
+        print("Erro ao acessar serviço de reconhecimento de fala:", e)
+    except sr.UnknownValueError:
+        print("Não foi possível entender o áudio")
 
-    return comando      
+    return comando   
 
+ana()   
 
+"""
 def comando_voz_usuario():
     comando = ana()
     if "horas" in comando:
@@ -45,7 +51,7 @@ def comando_voz_usuario():
 
 comando_voz_usuario()
 
-
+"""
 
 
 
