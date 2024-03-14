@@ -5,35 +5,43 @@ class Voice:
     def __init__(self):
         self.recognizer = sr.Recognizer()
         self.audio = pyttsx3.init()
+        self.text_updater = None
+
+    def set_text_updater(self,updater):
+        self.set_text_updater = updater        
 
 
     def ana (self):
         try:
             with sr.Microphone() as source:
-                print("Ouvindo...")
+                print("Ouvindo :) ")
                 self.recognizer.adjust_for_ambient_noise(source) #Ajuste para ruido ambiete
                 voz = self.recognizer.listen(source)
-                print('executando...')
+                self.update_text('Executando  :) ')
 
 
-                comando = self.recognizer.recognize_google(voz, language="pt-BR")
-                comando = comando.lower()
-                print("comando reconnhecido", comando)
-
-
+                comando = self.recognizer.recognize_google(voz, language="pt-BR").lower()
+                
                 if "ativar ana" in comando:
-                    print('Asistente Ativa')
-                    self.audio.say('Olá, tudo bem, eu sou a Ana')
+                    
+                    resposta = 'Olá, tudo bem, eu sou a Ana'
+                    self.update_text(resposta)
+                    self.audio.say(resposta)
                     self.audio.runAndWait()
-                    return 'Assistente ativa com comando ' + comando
+                    
                 else:
-                    return "Comando reconhecido: + " + comando
+                    resposta = 'Comando reconhecido ' + comando
+                    self.update_text(resposta) #usando atualizador
+
 
 
         except sr.RequestError as e:
-            print("Erro ao acessar serviço de reconhecimento de fala:", e)
-            return "Erro de serviço"
+            mensagem_erro = "Erro ao acessar serviço de reconhecimento de fala: " + str(e)
+            self.update_text(mensagem_erro)
         except sr.UnknownValueError:
-            print("Não foi possível entender o áudio")
-            return "Áudio não entendido"
+            self.update_text("Não foi possível entender o áudio")
         
+
+    def update_text(self, mensagem):
+        if self.text_updater:
+            self.text_updater(mensagem)
