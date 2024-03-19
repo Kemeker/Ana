@@ -1,5 +1,6 @@
 import speech_recognition as sr
 import pyttsx3
+from tempo import get_weather
 
 class Voice:
     def __init__(self):
@@ -8,16 +9,16 @@ class Voice:
         self.text_updater = None
 
     def set_text_updater(self,updater):
-        self.set_text_updater = updater        
+        self.text_updater = updater        
 
 
     def ana (self):
         try:
             with sr.Microphone() as source:
-                print("Ouvindo :) ")
+                print("Ouvindo...")
                 self.recognizer.adjust_for_ambient_noise(source) #Ajuste para ruido ambiete
                 voz = self.recognizer.listen(source)
-                self.update_text('Executando  :) ')
+                
 
 
                 comando = self.recognizer.recognize_google(voz, language="pt-BR").lower()
@@ -25,13 +26,27 @@ class Voice:
                 if "ativar ana" in comando:
                     
                     resposta = 'Olá, tudo bem, eu sou a Ana'
-                    self.update_text(resposta)
-                    self.audio.say(resposta)
-                    self.audio.runAndWait()
                     
+
+                elif "temperatura" in comando:
+                    city_name = "Chapecó"
+                    api_key = 'cc97ce14bd7ad1f9faf2644f05a3b145'
+                    temp_info = get_weather(api_key, city_name)
+
+                    if 'erro' not in temp_info:
+                        resposta = f"Em {temp_info['cidade']}, a temperatura é de {temp_info['temperatura']} graus Celsius, com {temp_info['descrição']}"        
+                    
+                    else:
+                        resposta = 'Desculpe, nao conseguir obter a temperatura'
                 else:
-                    resposta = 'Comando reconhecido ' + comando
-                    self.update_text(resposta) #usando atualizador
+                    resposta = 'comando nao reconhecido'        
+
+                self.update_text(resposta)
+                self.audio.say(resposta)
+                self.audio.runAndWait()    
+                    
+
+
 
 
 
@@ -45,3 +60,7 @@ class Voice:
     def update_text(self, mensagem):
         if self.text_updater:
             self.text_updater(mensagem)
+
+
+
+           
